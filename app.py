@@ -12,6 +12,9 @@ df_financials = pd.read_csv("pep_financials.csv")
 df_stock["Date"] = pd.to_datetime(df_stock["Date"])
 df_stock["Year"] = df_stock["Date"].dt.year
 
+# Ensure Year is int for plotting
+df_financials["Year"] = df_financials["Year"].astype(int)
+
 # Sidebar controls
 st.sidebar.title("PepsiCo Investment Dashboard")
 section = st.sidebar.selectbox("Select Analysis Section", [
@@ -105,11 +108,19 @@ elif section == "Forecasting Results":
         st.warning("No model accuracies found in MLflow logs.")
 
 elif section == "Financial Trends":
-    st.subheader("Revenue, Net Income, Gross Profit, Assets and Liabilities")
-    st.line_chart(df_fin_filtered.set_index("Year")[[
+    st.subheader("Financial Metrics")
+
+    options = st.sidebar.multiselect("Select financial metrics to display", [
         "Revenue", "Net_Income", "Gross_Profit", "Total_Assets", "Total_Liabilities"
-    ]])
-    st.markdown("PepsiCo has shown strong growth in revenue and profitability.")
+    ], default=["Revenue", "Net_Income", "Gross_Profit", "Total_Assets", "Total_Liabilities"])
+
+    if options:
+        chart_data = df_fin_filtered.set_index("Year")[options]
+        chart_data.index = chart_data.index.astype(str)  # Format x-axis labels as years
+        st.line_chart(chart_data)
+        st.markdown("PepsiCo has shown strong growth in financial performance.")
+    else:
+        st.warning("Please select at least one financial metric to display.")
 
 st.markdown("---")
 st.caption("Built by PRIME INC • Powered by Streamlit")
