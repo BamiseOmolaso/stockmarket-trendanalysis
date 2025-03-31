@@ -27,49 +27,51 @@ df_fin_filtered = df_financials[(df_financials["Year"] >= year_range[0]) & (df_f
 st.title("PepsiCo Investment Insights")
 
 if section == "Stock Return Overview":
-    st.subheader("Cumulative Returns: PEP vs KO vs S&P 500")
+    st.subheader("Cumulative Returns")
+
+    options = st.sidebar.multiselect("Select which stocks to display", 
+        ["PepsiCo (PEP)", "Coca-Cola (KO)", "S&P 500"], 
+        default=["PepsiCo (PEP)", "Coca-Cola (KO)", "S&P 500"]
+    )
+
+    name_map = {
+        "PepsiCo (PEP)": "PEP_CumReturn",
+        "Coca-Cola (KO)": "KO_CumReturn",
+        "S&P 500": "GSPC_CumReturn"
+    }
 
     df_filtered = df_filtered.copy()
     df_filtered.dropna(subset=["PEP_Return", "KO_Return", "GSPC_Return"], inplace=True)
-
-    # Calculate cumulative returns
     df_filtered["PEP_CumReturn"] = (1 + df_filtered["PEP_Return"]).cumprod()
     df_filtered["KO_CumReturn"] = (1 + df_filtered["KO_Return"]).cumprod()
     df_filtered["GSPC_CumReturn"] = (1 + df_filtered["GSPC_Return"]).cumprod()
 
-    # Rename columns for nicer labels
-    chart_df = df_filtered[["PEP_CumReturn", "KO_CumReturn", "GSPC_CumReturn"]].rename(columns={
-        "PEP_CumReturn": "PepsiCo (PEP)",
-        "KO_CumReturn": "Coca-Cola (KO)",
-        "GSPC_CumReturn": "S&P 500"
-    })
-
+    selected_columns = [name_map[o] for o in options]
+    chart_df = df_filtered[selected_columns].rename(columns={v: k for k, v in name_map.items()})
     chart_df.index = pd.to_datetime(df_filtered["Date"]) if "Date" in df_filtered else df_filtered.index
     st.line_chart(chart_df)
 
-    st.markdown("""
-    - **PepsiCo (PEP)**: Primary investment target
-    - **Coca-Cola (KO)**: Competitor
-    - **S&P 500**: Market benchmark
-    """)
-
 elif section == "Volatility Analysis":
-    st.subheader("30-Day Rolling Volatility: PEP vs KO vs S&P 500")
-    df_filtered = df_filtered.copy()
-    df_filtered.dropna(subset=["PEP_RollingVol", "KO_RollingVol", "GSPC_RollingVol"], inplace=True)
+    st.subheader("30-Day Rolling Volatility")
 
-    vol_df = df_filtered[["PEP_RollingVol", "KO_RollingVol", "GSPC_RollingVol"]].rename(columns={
-        "PEP_RollingVol": "PepsiCo (PEP)",
-        "KO_RollingVol": "Coca-Cola (KO)",
-        "GSPC_RollingVol": "S&P 500"
-    })
+    options = st.sidebar.multiselect("Select which volatilities to display", 
+        ["PepsiCo (PEP)", "Coca-Cola (KO)", "S&P 500"], 
+        default=["PepsiCo (PEP)", "Coca-Cola (KO)", "S&P 500"]
+    )
+
+    name_map = {
+        "PepsiCo (PEP)": "PEP_RollingVol",
+        "Coca-Cola (KO)": "KO_RollingVol",
+        "S&P 500": "GSPC_RollingVol"
+    }
+
+    df_filtered = df_filtered.copy()
+    df_filtered.dropna(subset=list(name_map.values()), inplace=True)
+
+    selected_columns = [name_map[o] for o in options]
+    vol_df = df_filtered[selected_columns].rename(columns={v: k for k, v in name_map.items()})
     vol_df.index = pd.to_datetime(df_filtered["Date"]) if "Date" in df_filtered else df_filtered.index
     st.line_chart(vol_df)
-
-    st.markdown("""
-    - Rolling 30-day standard deviation of daily returns.
-    - Helps assess recent market risk trends.
-    """)
 
 elif section == "Forecasting Results":
     st.subheader("Forecasting Model Accuracy from MLflow Logs")
@@ -77,24 +79,28 @@ elif section == "Forecasting Results":
     import mlflow
     from mlflow.tracking import MlflowClient
 
-    # Load MLflow logs from your local experiment
     mlflow.set_tracking_uri("file:./mlruns")
     client = MlflowClient()
     experiment = mlflow.get_experiment_by_name("PEP_Stock_Trend_Forecasting")
 
     runs = client.search_runs(experiment.experiment_id)
 
-    model_scores = {}
+    all_scores = {}
     for run in runs:
         name = run.data.tags.get("mlflow.runName", run.info.run_id)
         accuracy = run.data.metrics.get("accuracy", None)
-        if accuracy:
-            model_scores[name] = accuracy
+        if accuracy is not None:
+            all_scores[name] = accuracy
 
-    if model_scores:
-        st.bar_chart(model_scores)
-        best_model = max(model_scores, key=model_scores.get)
-        st.markdown(f"**Best Performing Model:** {best_model} ({model_scores[best_model]:.2%})")
+    if all_scores:
+        model_names = list(all_scores.keys())
+        selected_models = st.sidebar.multiselect("Select models to display", model_names, default=model_names)
+        filtered_scores = {k: all_scores[k] for k in selected_models if k in all_scores}
+        st.bar_chart(filtered_scores)
+
+        if filtered_scores:
+            best_model = max(filtered_scores, key=filtered_scores.get)
+            st.markdown(f"**Best Performing Model:** {best_model} ({filtered_scores[best_model]:.2%})")
     else:
         st.warning("No model accuracies found in MLflow logs.")
 
