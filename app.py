@@ -50,8 +50,8 @@ elif section == "Forecasting Results":
     st.markdown("LSTM is the most reliable model based on historical accuracy.")
 
 elif section == "Financial Trends":
-    st.subheader("Revenue, Net Income, and Liabilities")
-    st.line_chart(df_fin_filtered.set_index("Year")[["Revenue", "NetIncome", "Liabilities"]])
+    st.subheader("Revenue, Net Income, Gross Profit, Assets and Liabilities")
+    st.line_chart(df_fin_filtered.set_index("Year")[["Revenue", "Net_Income", "Gross_Profit", "Total_Assets", "Total_Liabilities"]])
     st.markdown("PepsiCo has shown strong growth in revenue and profitability.")
 
 st.markdown("---")
