@@ -134,16 +134,10 @@ elif section == "Regression Analysis":
     st.text("KO Regression Summary:")
     st.text(model_ko.summary().as_text())
 
-    st.markdown(f""
-    ### Interpretation
-
-    - **R-squared** shows how well each stock return is explained by the S&P 500 (market).
-    - **PEP R2**: {model_pep.rsquared:.3f} | **KO R2**: {model_ko.rsquared:.3f}
-
-    Based on this, **{'PepsiCo (PEP)' if model_pep.rsquared > model_ko.rsquared else 'Coca-Cola (KO)'}** is slightly more aligned with market movement.
-
-    However, remember that **lower correlation** could also mean **more diversification benefit**, depending on your investment strategy.
-    "")
+    st.markdown("R-squared shows how well a stock’s return is explained by the S&P 500.")
+    st.markdown(f"PEP R²: {model_pep.rsquared:.3f} | KO R²: {model_ko.rsquared:.3f}")
+    st.markdown(f"{'PepsiCo (PEP)' if model_pep.rsquared > model_ko.rsquared else 'Coca-Cola (KO)'} is more aligned with market movement.")
+    st.markdown("But lower correlation can also offer better diversification, depending on your strategy.")
 
 st.markdown("---")
 st.caption("Built by PRIME INC • Powered by Streamlit")
