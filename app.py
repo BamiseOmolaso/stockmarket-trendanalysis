@@ -136,7 +136,12 @@ elif section == "Regression Analysis":
 
     st.markdown("R-squared shows how well a stock’s return is explained by the S&P 500.")
     st.markdown(f"PEP R²: {model_pep.rsquared:.3f} | KO R²: {model_ko.rsquared:.3f}")
-    st.markdown(f"{'PepsiCo (PEP)' if model_pep.rsquared > model_ko.rsquared else 'Coca-Cola (KO)'} is more aligned with market movement.")
+    alignment_message = (
+    "Both stocks are equally aligned with market movement."
+    if model_pep.rsquared == model_ko.rsquared else
+    "PepsiCo (PEP) is more aligned." if model_pep.rsquared > model_ko.rsquared else
+    "Coca-Cola (KO) is more aligned.")
+    st.markdown(alignment_message)
     st.markdown("But lower correlation can also offer better diversification, depending on your strategy.")
 
 st.markdown("---")
