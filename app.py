@@ -18,7 +18,8 @@ section = st.sidebar.selectbox("Select Analysis Section", [
     "Stock Return Overview", 
     "Volatility Analysis", 
     "Forecasting Results", 
-    "Financial Trends"
+    "Financial Trends",
+    "Regression Analysis"
 ])
 year_range = st.sidebar.slider("Select Year Range", 2010, 2024, (2015, 2024))
 df_filtered = df_stock[(df_stock["Year"] >= year_range[0]) & (df_stock["Year"] <= year_range[1])]
@@ -143,6 +144,6 @@ elif section == "Regression Analysis":
 
     However, remember that **lower correlation** could also mean **more diversification benefit**, depending on your investment strategy.
     "")
-    
+
 st.markdown("---")
 st.caption("Built by PRIME INC • Powered by Streamlit")
