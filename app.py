@@ -12,9 +12,6 @@ df_financials = pd.read_csv("pep_financials.csv")
 df_stock["Date"] = pd.to_datetime(df_stock["Date"])
 df_stock["Year"] = df_stock["Date"].dt.year
 
-# Ensure Year is int for plotting
-df_financials["Year"] = df_financials["Year"].astype(int)
-
 # Sidebar controls
 st.sidebar.title("PepsiCo Investment Dashboard")
 section = st.sidebar.selectbox("Select Analysis Section", [
@@ -108,19 +105,44 @@ elif section == "Forecasting Results":
         st.warning("No model accuracies found in MLflow logs.")
 
 elif section == "Financial Trends":
-    st.subheader("Financial Metrics")
-
-    options = st.sidebar.multiselect("Select financial metrics to display", [
+    st.subheader("Revenue, Net Income, Gross Profit, Assets and Liabilities")
+    st.line_chart(df_fin_filtered.set_index("Year")[[
         "Revenue", "Net_Income", "Gross_Profit", "Total_Assets", "Total_Liabilities"
-    ], default=["Revenue", "Net_Income", "Gross_Profit", "Total_Assets", "Total_Liabilities"])
+    ]])
+    st.markdown("PepsiCo has shown strong growth in revenue and profitability.")
 
-    if options:
-        chart_data = df_fin_filtered.set_index("Year")[options]
-        chart_data.index = chart_data.index.astype(str)  # Format x-axis labels as years
-        st.line_chart(chart_data)
-        st.markdown("PepsiCo has shown strong growth in financial performance.")
-    else:
-        st.warning("Please select at least one financial metric to display.")
+elif section == "Regression Analysis":
+    st.subheader("Market Return vs Stock Return (OLS Regression)")
 
+    import statsmodels.api as sm
+
+    # Prepare data
+    X = df_stock["GSPC_Return"]
+    X = sm.add_constant(X)
+
+    y_pep = df_stock["PEP_Return"]
+    y_ko = df_stock["KO_Return"]
+
+    model_pep = sm.OLS(y_pep, X, missing="drop").fit()
+    model_ko = sm.OLS(y_ko, X, missing="drop").fit()
+
+    # Show summaries
+    st.text("PEP Regression Summary:")
+    st.text(model_pep.summary().as_text())
+
+    st.text("KO Regression Summary:")
+    st.text(model_ko.summary().as_text())
+
+    st.markdown(f""
+    ### Interpretation
+
+    - **R-squared** shows how well each stock's return is explained by the S&P 500 (market).
+    - **PEP R²**: {model_pep.rsquared:.3f} | **KO R²**: {model_ko.rsquared:.3f}
+
+    Based on this, **{'PepsiCo (PEP)' if model_pep.rsquared > model_ko.rsquared else 'Coca-Cola (KO)'}** is slightly more aligned with market movement.
+
+    However, remember that **lower correlation** could also mean **more diversification benefit**, depending on your investment strategy.
+    "")
+    
 st.markdown("---")
 st.caption("Built by PRIME INC • Powered by Streamlit")
