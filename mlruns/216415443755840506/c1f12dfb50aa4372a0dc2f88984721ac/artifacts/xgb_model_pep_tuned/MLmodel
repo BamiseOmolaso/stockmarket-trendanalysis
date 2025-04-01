@@ -1,0 +1,35 @@
+artifact_path: xgb_model_pep_tuned
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.pkl
+    predict_fn: predict
+    python_version: 3.11.11
+  sklearn:
+    code: null
+    pickled_model: model.pkl
+    serialization_format: cloudpickle
+    sklearn_version: 1.6.1
+is_signature_from_type_hint: false
+mlflow_version: 2.21.2
+model_size_bytes: 138740
+model_uuid: cba136d1ec0c40a88ab28003a894b355
+prompts: null
+run_id: c1f12dfb50aa4372a0dc2f88984721ac
+saved_input_example_info:
+  artifact_path: input_example.json
+  pandas_orient: split
+  serving_input_path: serving_input_example.json
+  type: dataframe
+signature:
+  inputs: '[{"type": "double", "name": "PEP_Open", "required": true}, {"type": "double",
+    "name": "PEP_High", "required": true}, {"type": "double", "name": "PEP_Low", "required":
+    true}, {"type": "double", "name": "PEP_Close", "required": true}, {"type": "long",
+    "name": "PEP_Volume", "required": true}]'
+  outputs: '[{"type": "long", "required": true}]'
+  params: null
+type_hint_from_example: false
+utc_time_created: '2025-04-01 11:31:21.677535'

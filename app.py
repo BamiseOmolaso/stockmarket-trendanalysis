@@ -106,11 +106,17 @@ elif section == "Forecasting Results":
         st.warning("No model accuracies found in MLflow logs.")
 
 elif section == "Financial Trends":
-    st.subheader("Revenue, Net Income, Gross Profit, Assets and Liabilities")
-    st.line_chart(df_fin_filtered.set_index("Year")[[
-        "Revenue", "Net_Income", "Gross_Profit", "Total_Assets", "Total_Liabilities"
-    ]])
-    st.markdown("PepsiCo has shown strong growth in revenue and profitability.")
+
+    available_metrics = [col for col in df_fin_filtered.columns if col != "Year"]
+    selected_metrics = st.multiselect(
+        "Select metrics to display", available_metrics, default=available_metrics[:3]
+    )
+
+    if selected_metrics:
+        st.line_chart(df_fin_filtered.set_index("Year")[selected_metrics])
+        st.markdown("PepsiCo's financial performance over time.")
+    else:
+        st.warning("Please select at least one financial metric to display.")
 
 elif section == "Regression Analysis":
     st.subheader("Market Return vs Stock Return (OLS Regression)")

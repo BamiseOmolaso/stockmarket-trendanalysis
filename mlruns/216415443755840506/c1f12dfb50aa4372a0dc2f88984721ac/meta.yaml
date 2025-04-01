@@ -1,0 +1,15 @@
+artifact_uri: file:///content/drive/MyDrive/Colab Notebooks/stockmarket-trendanalysis/mlruns/216415443755840506/c1f12dfb50aa4372a0dc2f88984721ac/artifacts
+end_time: 1743507086132
+entry_point_name: ''
+experiment_id: '216415443755840506'
+lifecycle_stage: active
+run_id: c1f12dfb50aa4372a0dc2f88984721ac
+run_name: XGBoost_TUNED_PEP
+run_uuid: c1f12dfb50aa4372a0dc2f88984721ac
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1743507081406
+status: 3
+tags: []
+user_id: root
