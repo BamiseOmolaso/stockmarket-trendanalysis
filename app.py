@@ -137,7 +137,7 @@ elif section == "Regression Analysis":
     st.markdown(f""
     ### Interpretation
 
-    - **R-squared** shows how well each stock's return is explained by the S&P 500 (market).
+    - **R-squared** shows how well each stock return is explained by the S&P 500 (market).
     - **PEP R²**: {model_pep.rsquared:.3f} | **KO R²**: {model_ko.rsquared:.3f}
 
     Based on this, **{'PepsiCo (PEP)' if model_pep.rsquared > model_ko.rsquared else 'Coca-Cola (KO)'}** is slightly more aligned with market movement.
