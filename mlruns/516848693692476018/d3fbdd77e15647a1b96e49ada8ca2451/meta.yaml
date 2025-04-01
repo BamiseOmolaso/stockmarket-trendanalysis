@@ -1,0 +1,15 @@
+artifact_uri: file:///content/drive/MyDrive/Colab Notebooks/stockmarket-trendanalysis/mlruns/516848693692476018/d3fbdd77e15647a1b96e49ada8ca2451/artifacts
+end_time: 1743514381885
+entry_point_name: ''
+experiment_id: '516848693692476018'
+lifecycle_stage: active
+run_id: d3fbdd77e15647a1b96e49ada8ca2451
+run_name: LSTM_Balanced_PEP
+run_uuid: d3fbdd77e15647a1b96e49ada8ca2451
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1743514369594
+status: 3
+tags: []
+user_id: root

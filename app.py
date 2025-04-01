@@ -111,7 +111,6 @@ elif section == "Financial Trends":
     selected_metrics = st.sidebar.multiselect(
         "Select metrics to display", available_metrics, default=available_metrics[:3]
     )
-
     if selected_metrics:
         # Convert 'Year' to string to avoid commas in formatting
         df_fin_filtered["Year"] = df_fin_filtered["Year"].astype(str)
