@@ -113,6 +113,8 @@ elif section == "Financial Trends":
     )
 
     if selected_metrics:
+        # Convert 'Year' to string to avoid commas in formatting
+        df_fin_filtered["Year"] = df_fin_filtered["Year"].astype(str)
         st.line_chart(df_fin_filtered.set_index("Year")[selected_metrics])
         st.markdown("PepsiCo's financial performance over time.")
     else:
