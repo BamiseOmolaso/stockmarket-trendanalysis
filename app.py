@@ -108,7 +108,7 @@ elif section == "Forecasting Results":
 elif section == "Financial Trends":
     st.subheader("Financial Trends Over Time")
     available_metrics = [col for col in df_fin_filtered.columns if col != "Year"]
-    selected_metrics = st.multiselect(
+    selected_metrics = st.sidebar.multiselect(
         "Select metrics to display", available_metrics, default=available_metrics[:3]
     )
 
