@@ -134,15 +134,22 @@ elif section == "Regression Analysis":
     st.text("KO Regression Summary:")
     st.text(model_ko.summary().as_text())
 
-    st.markdown("R-squared shows how well a stock’s return is explained by the S&P 500.")
-    st.markdown(f"PEP R²: {model_pep.rsquared:.3f} | KO R²: {model_ko.rsquared:.3f}")
-    alignment_message = ("Both stocks are equally aligned with market movement."
-    if model_pep.rsquared == model_ko.rsquared else
-    "PepsiCo (PEP) is more aligned." if model_pep.rsquared > model_ko.rsquared else
-    "Coca-Cola (KO) is more aligned.")
-    st.markdown(alignment_message)
-    st.markdown("But lower correlation can also offer better diversification, depending on your strategy.")
+    # Simple, clean interpretation
+    st.markdown("### Interpretation")
+    st.markdown("R-squared shows how well a stock’s return is explained by the S&P 500 (market).")
+    st.markdown(f"**PEP R²**: {model_pep.rsquared:.3f} | **KO R²**: {model_ko.rsquared:.3f}")
 
+    # Logic to handle tie, higher PEP, or higher KO
+    alignment_message = (
+        "Both stocks are equally aligned with market movement."
+        if model_pep.rsquared == model_ko.rsquared else
+        "PepsiCo (PEP) is more aligned with market movement."
+        if model_pep.rsquared > model_ko.rsquared else
+        "Coca-Cola (KO) is more aligned with market movement."
+    )
+    st.markdown(alignment_message)
+
+    st.markdown("Keep in mind that lower correlation could offer more diversification benefits, depending on your investment strategy.")
 
 st.markdown("---")
 st.caption("Built by PRIME INC • Powered by Streamlit")
